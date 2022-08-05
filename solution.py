@@ -4,9 +4,21 @@ from gettext import find
 class FactorHandler:
     
     def __init__(self):
-        self.timeFormats = ["dd/mm/yyyy", "dd/yyyy/mm", "yyyy/mm/dd", "yyyy/dd/mm", "mm/yyyy/dd", "mm/dd/yyyy"]
+        self.defaultFormat = "yyyy/mm/dd"
+
+        self.timeFormats = ["dd/mm/yyyy", 
+                            "dd/yyyy/mm", 
+                            "yyyy/mm/dd", 
+                            "yyyy/dd/mm", 
+                            "mm/yyyy/dd", 
+                            "mm/dd/yyyy"]
+
         self.totalFactor = 0
         self.factors = {}
+
+        self.day = ""
+        self.month = ""
+        self.year = ""
 
     def add_factor(self, time_format, time, value):
         findTimeFormat = ""
@@ -36,9 +48,39 @@ class FactorHandler:
     def showFactors(self):
         for i in self.factors:
             print(self.factors[i])
+    
+    def formatConverter(self, currentFormat, time):
+        if (currentFormat == "dd/mm/yyyy"):
+            self.day = time[0:2]
+            self.month = time[3:5]
+            self.year = time[6:]
+        elif (currentFormat == "dd/yyyy/mm"):
+            self.day = time[0:2]
+            self.month = time[8:]
+            self.year = time[3:7]
+        elif (currentFormat == "yyyy/mm/dd"):
+            self.day = time[8:]
+            self.month = time[5:7]
+            self.year = time[:4]
+        elif (currentFormat == "yyyy/dd/mm"):
+            self.day = time[5:7]
+            self.month = time[8:]
+            self.year = time[:4]
+        elif (currentFormat == "mm/yyyy/dd"):
+            self.day = time[8:]
+            self.month = time[0:2]
+            self.year = time[3:7]
+        elif (currentFormat == "mm/dd/yyyy"):
+            self.day = time[3:5]
+            self.month = time[0:2]
+            self.year = time[6:]
+        print(self.year, self.month, self.day)
 
 fh = FactorHandler()
 
-fh.add_factor("dd/mm/yyyy", "02/10/2019", 10)
-fh.add_factor("yyyy/dd/mm", "05/10/2019", 3)
-fh.showFactors()
+fh.formatConverter("dd/mm/yyyy", "02/10/2019")
+fh.formatConverter("dd/yyyy/mm", "02/2019/10")
+fh.formatConverter("mm/dd/yyyy", "10/02/2019")
+fh.formatConverter("mm/yyyy/dd", "10/2019/02")
+fh.formatConverter("yyyy/dd/mm", "2019/02/10")
+fh.formatConverter("yyyy/mm/dd", "2019/10/02")
